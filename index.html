@@ -1395,7 +1395,41 @@ async function deleteVideo(id) {
   loadVideos();
 }
 
-// ════════════════════════════════════════════════
+// ═══async function openLesson(lessonId) {
+    // 1. Fetch questions from Supabase that match the Video ID
+    const { data, error } = await _supabase
+        .from('quiz_questions')
+        .select('*')
+        .eq('video_id', lessonId);
+
+    if (error) {
+        showToast("Error loading quiz: " + error.message);
+        return;
+    }
+
+    if (data && data.length > 0) {
+        // 2. Feed the data to the quiz engine
+        aiGeneratedQuestions = data; 
+        currentQuestionIndex = 0;
+        userScore = 0;
+        
+        // 3. Update the Title on the screen
+        const titleElement = document.querySelector('.quiz-header-title');
+        if(titleElement) titleElement.textContent = lessonId.replace('_', ' ').toUpperCase() + " QUIZ";
+        
+        // 4. Start the quiz
+        renderQuestion(0); 
+        
+        // 5. Scroll down to the assessment area
+        const assessSection = document.getElementById('assessment');
+        if(assessSection) assessSection.scrollIntoView({ behavior: 'smooth' });
+        
+        showToast(`Ready! ${data.length} questions loaded for ${lessonId}`);
+    } else {
+        showToast("No quiz found for this lesson yet.");
+    }
+}
+═════════════════════════════════════════════
 // ── QUIZ — Loaded from Supabase ──
 // ════════════════════════════════════════════════
 let questions = [];
