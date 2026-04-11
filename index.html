@@ -1291,7 +1291,8 @@ function renderVideoGrid() {
       </div>
       <div class="video-grid">
         ${videos.map(v => `
-          <div class="video-card" onclick="handleVideoClick(${v.index})" style="opacity:1;transform:none;">
+          onclick="handleVideoClick(${v.index}); openLesson('${v.title.toLowerCase().replace(/\s+/g, '_')}_1')"
+          style="opacity:1;transform:none;">
             <div class="video-thumb" style="background:linear-gradient(135deg,#0d1b3e,#1a2f5e);">
               <div class="play-btn">${v.loomUrl ? '▶' : '⏳'}</div>
               <div class="video-lock">🔒 Members Only</div>
