@@ -1699,16 +1699,34 @@ correct_index is 0 for A, 1 for B, 2 for C, 3 for D.`
 }
 
 async function saveAIQuestions() {
-  if (!aiGeneratedQuestions.length) return;
-  const { error } = await _supabase.from('quiz_questions').insert(aiGeneratedQuestions);
-  if (error) { showToast('Error saving: ' + error.message); return; }
-  showToast(`✓ ${aiGeneratedQuestions.length} questions saved to quiz!`);
-  document.getElementById('aiSaveBtn').style.display = 'none';
-  document.getElementById('aiResult').style.display = 'none';
-  document.getElementById('aiQuizTopic').value = '';
-  aiGeneratedQuestions = [];
-  loadQuizQuestions();
-}
+    if (!aiGeneratedQuestions.length) return;
+    
+    // 1. Get the Video ID from the new box
+    const videoId = document.getElementById('quizVideoId').value.trim();
+    
+    if (!videoId) {
+        showToast('Please enter a Video Lesson ID to organize this quiz!');
+        return;
+    }
+
+    // 2. Add that ID to every question before sending to Supabase
+    const questionsToSave = aiGeneratedQuestions.map(q => ({
+        ...q,
+        video_id: videoId
+    }));
+
+    const { error } = await _supabase.from('quiz_questions').insert(questionsToSave);
+
+    if (error) {
+        showToast('Error saving: ' + error.message);
+    } else {
+        showToast(`Success! Quiz saved to folder: ${videoId}`);
+        // Clear the form
+        aiGeneratedQuestions = [];
+        document.getElementById('aiResult').style.display = 'none';
+    }
+  }
+  
 
 // ── TOAST ──
 function showToast(msg){
