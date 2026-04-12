@@ -954,7 +954,7 @@ async function addQuizQuestion() {
   const correct_index = parseInt(document.getElementById('newCorrect').value);
   if (!video_id) { showToast('Please select a video first.'); return; }
   if (!question||!option_a||!option_b||!option_c||!option_d) { showToast('Please fill in all fields.'); return; }
-  const { error } = await _supabase.from('quiz_questions').insert([{ video_id, question, option_a, option_b, option_c, option_d, correct_index }]);
+  const { error } = await supabase.from('quiz_questions').insert([{ video_id, question, option_a, option_b, option_c, option_d, correct_index }]);
   if (error) { showToast('Error: ' + error.message); return; }
   showToast('✓ Question added!');
   document.getElementById('newQuestion').value='';
@@ -966,7 +966,7 @@ async function addQuizQuestion() {
 }
 
 async function deleteQuestion(id) {
-  const { error } = await _supabase.from('quiz_questions').delete().eq('id', id);
+  const { error } = await supabase.from('quiz_questions').delete().eq('id', id);
   if (error) { showToast('Error deleting.'); return; }
   showToast('Question deleted.');
   loadAllQuizQuestions();
