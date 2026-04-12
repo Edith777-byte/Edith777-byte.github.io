@@ -866,12 +866,8 @@ async function addVideo() {
   btn.textContent = 'Saving...';
   btn.disabled = true;
 
-  const { data, error } = await _supabase.from('videos').insert([{
-    title,
-    folder: folder || 'General',
-    topic: topic || 'General',
-    video_url,
-    duration: duration || '—',
+  const { error } = await supabase.from('videos').insert([{ title, video_url: url, topic, duration, folder }]);
+
     lesson_number: VIDEO_LESSONS.length + 1
   }]).select();
 
