@@ -859,12 +859,40 @@ async function addVideo() {
   const topic    = document.getElementById('newVideoTopic').value.trim();
   const video_url = document.getElementById('newVideoUrl').value.trim();
   const duration = document.getElementById('newVideoDuration').value.trim();
+  
   if (!title) { showToast('Please enter a video title.'); return; }
   if (!video_url) { showToast('Please enter the Loom video URL.'); return; }
+  
   const btn = document.querySelector('#admin-videos .login-btn');
+  const originalText = btn.textContent;
   btn.textContent = 'Saving...';
   btn.disabled = true;
- const { error } = await supabase.from('videos').insert([{ title, video_url: url, topic, duration, folder }]);
+
+  try {
+    const { error } = await supabase.from('videos').insert([{ 
+      title, 
+      video_url, 
+      topic, 
+      duration, 
+      folder 
+    }]);
+
+    if (error) throw error;
+    
+    showToast('✓ Video added successfully!');
+    // Clear the inputs
+    document.getElementById('newVideoTitle').value = '';
+    document.getElementById('newVideoUrl').value = '';
+    loadAdminVideos(); // Refresh the list
+  } catch (err) {
+    console.error(err);
+    showToast('Error: ' + err.message);
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
   lesson_number: VIDEO_LESSONS.length + 1
   }]).select();
 
