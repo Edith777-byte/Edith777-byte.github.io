@@ -861,13 +861,11 @@ async function addVideo() {
   const duration = document.getElementById('newVideoDuration').value.trim();
   if (!title) { showToast('Please enter a video title.'); return; }
   if (!video_url) { showToast('Please enter the Loom video URL.'); return; }
-
   const btn = document.querySelector('#admin-videos .login-btn');
   btn.textContent = 'Saving...';
   btn.disabled = true;
-
-  const { error } = await supabase.from('videos').insert([{ title, video_url: url, topic, duration, folder }]);
-    lesson_number: VIDEO_LESSONS.length + 1
+ const { error } = await supabase.from('videos').insert([{ title, video_url: url, topic, duration, folder }]);
+  lesson_number: VIDEO_LESSONS.length + 1
   }]).select();
 
   btn.textContent = 'Add Video';
