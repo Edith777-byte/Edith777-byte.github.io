@@ -1308,43 +1308,7 @@ function renderVideoGrid() {
     const { data } = await _supabase.auth.getSession();
  }
   if (!loggedIn) {
-    // Show login prompt
-    document.getElementById('videoModalContent').innerHTML = `
-      <    grid.innerHTML = Object.entries(folders).map(([folderName, videos]) => `
-        <div class="video-folder">
-            <div class="folder-header">
-                <span class="folder-icon">${folderIcons[folderName] || '📂'}</span>
-                <span class="folder-title">${folderName}</span>
-                <span class="folder-count">${videos.length} lesson${videos.length > 1 ? 's' : ''}</span>
-            </div>
-            <div class="video-grid">
-                ${videos.map(v => `
-                    <div class="video-card" onclick="handleVideoClick(${v.index})" style="opacity:1;transform:none;">
-                        <div class="video-thumb" style="background: linear-gradient(135deg, #0d1b3e, #1a2f5e);">
-                            <div class="play-btn-thumb"><i class="fas fa-play"></i></div>
-                            <div class="video-lock">🔐 Members Only</div>
-                            <div class="video-topic">${v.topic}</div>
-                        </div>
-                        <div class="video-info">
-                            <div class="video-title">${v.title}</div>
-                            <div class="video-meta"><span>📖 Lesson ${v.index + 1}</span><span>⏱️ ${v.duration}</span></div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `).join('');
-div style="text-align:center;padding:24px;">
-        <div style="font-size:2.5rem;margin-bottom:16px;">🔐</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:12px;">Login Required</div>
-        <p style="color:var(--slate);margin-bottom:24px;">This video is exclusively for enrolled students. Please login to your portal to watch.</p>
-        <a href="#portal" class="btn-primary" style="text-decoration:none;" onclick="closeModal('videoModal')">Login to Your Portal</a>
-      </div>
-    `;
-    document.getElementById('videoModal').classList.add('open');
-    return;
-  }
-  openVideo(index);
+    
 }
 
 function renderAdminVideos() {
@@ -1357,7 +1321,23 @@ function renderAdminVideos() {
   tbody.innerHTML = VIDEO_LESSONS.map(v => `
     <tr>
       <td>${v.title}</td>
-      <td>${v.folder || 'General'}</td>
+      <td>${v.folder ||         // Show login prompt
+        document.getElementById('videoModalContent').innerHTML = `
+            <div style="text-align:center;padding:24px;">
+                <div style="font-size:2.5rem;margin-bottom:16px;">🔐</div>
+                <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:12px;">Members Only</h2>
+                <p style="color:var(--slate);margin-bottom:24px;">This video is exclusively for enrolled students.</p>
+                <a href="#portal" class="btn-primary" style="text-decoration:none;" onclick="closeModal('videoModal')">Login to View</a>
+            </div>
+        `;
+        document.getElementById('videoModal').classList.add('open');
+        return;
+    }
+    
+    // If logged in, play the video
+    openVideo(index);
+}
+'General'}</td>
       <td>${v.topic}</td>
       <td>${v.duration}</td>
       <td><button class="action-btn action-remove" onclick="deleteVideo(${v.id})">Delete</button></td>
