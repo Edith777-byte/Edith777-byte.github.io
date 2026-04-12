@@ -1389,7 +1389,22 @@ async function handleLogout() {
     await _supabase.auth.signOut();
     location.reload();
   }
-                            
+function sendEmail(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.innerText = 'Sending...';
+
+    emailjs.sendForm('default_service', 'template_id_here', e.target)
+        .then(() => {
+            alert('Message sent successfully!');
+            e.target.reset();
+            btn.innerText = 'Send Message';
+        }, (err) => {
+            alert('Failed to send: ' + JSON.stringify(err));
+            btn.innerText = 'Send Message';
+        });
+  }
+
 async function addVideo() {
     const title = document.getElementById('newVideoTitle').value.trim();
     const folder = document.getElementById('newVideoFolder').value.trim();
