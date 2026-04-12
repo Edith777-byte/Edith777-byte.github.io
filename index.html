@@ -1310,8 +1310,20 @@ function renderVideoGrid() {
   `).join('');
  async function handleVideoClick(index) {
     const v = VIDEO_LESSONS[index];
+    if (!v) return;
+
+    // This automatically creates the ID like 'concord_1' from the title
     const quizId = v.title.toLowerCase().replace(/\s+/g, '_') + "_1";
     
+    // 1. Try to load the quiz for this video
+    if (typeof openLesson === "function") {
+        openLesson(quizId);
+    }
+
+    // 2. Play the video
+    openVideo(index);
+}
+
     // 1. Prepare the quiz immediately
     openLesson(quizId);
 
